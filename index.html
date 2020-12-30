@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <title>race</title>
+    <style>
+        body {
+            height: 100%;
+            width: 100%;
+            /* padding: 30px; */
+            background-color: #65b1c49b;
+            background-size: cover;
+
+            /* opacity: 0.5; */
+        }
+
+        .container {
+            position: relative;
+            height: 80vh;
+            width: 20%;
+            left: 5%;
+            margin-top: 20px;
+            padding: 0;
+            background-color: #666565;
+            overflow: hidden;
+            /* z-index: 2; */
+        }
+
+        .line {
+            position: absolute;
+            height: 150px;
+            width: 4%;
+            margin-left: 45%;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        #score_box {
+            position: absolute;
+            margin-top: 20%;
+            margin-left: 10%;
+            font-size: 35px;
+            background-color: white;
+            color: #454545;
+            padding: 10px;
+            box-shadow: 4px 4px 0px 1px #808080;
+            z-index: 3;
+        }
+
+        #restart_box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #292929;
+            color: white;
+            font-size: 40px;
+            text-align: center;
+            display: none;
+            z-index: 2;
+        }
+
+        #restart_box h1 {
+            font-size: 100px;
+            color: rgb(243, 100, 17);
+            margin-top: 10%;
+        }
+
+        #restart {
+            border: none;
+            padding: 25px;
+            color: white;
+            background-color: #3d9cc2;
+            font-size: 30px;
+            margin: 10% auto 0;
+        }
+
+        #line_1 {
+            top: -150px;
+        }
+
+        #line_2 {
+            top: 150px;
+        }
+
+        #line_3 {
+            top: 450px;
+        }
+
+        .car img {
+            position: absolute;
+            height: 60px;
+            width: 40px;
+        }
+
+        #car img {
+            bottom: 0px;
+            left: 100px;
+        }
+
+        #car_1 img {
+            top: -100px;
+            left: 60%;
+        }
+
+        #car_2 img {
+            top: -200px;
+            left: 40%;
+        }
+
+        #car_3 img {
+            top: -350px;
+            left: 50%;
+        }
+
+        .flat img {
+            width: 180px;
+            height: 90px;
+        }
+
+        #time {
+            font-size: 150px;
+            color: rgb(255, 238, 0);
+            font-weight: 800;
+            margin-top: 15%;
+            margin-left: 49%;
+            position: absolute;
+            z-index: 4;
+        }
+
+        h3 {
+            font-size: 150px;
+            color: rgb(255, 238, 0);
+            font-weight: 600;
+            margin-top: 15%;
+            margin-left: 40%;
+            position: absolute;
+            z-index: 4;
+        }
+    </style>
+</head>
+
+<body style="
+      background-image: url('/racing.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+    ">
+
+    <div id="score_box">
+        得分: <span id="score">0</span><br />
+        <div class="flat"><img src="./images/racing banner.png" alt="" /></div>
+    </div>
+
+    <div id="restart_box">
+        <h1 class="animate__animated animate__bounce">Game Over</h1>
+        <button id="restart" class="btn btn-info">再玩一次<br /></button>
+    </div>
+
+    <div class="container">
+
+        <div id="line_1" class="line"></div>
+        <div id="line_2" class="line"></div>
+        <div id="line_3" class="line"></div>
+        <div id="car" class="car"><img src="./images/black_car.png" alt="" /></div>
+        <div id="car_1" class="car"><img src="./images/yellow_car.png" alt="" /></div>
+        <div id="car_2" class="car"><img src="./images/yellow_car.png" alt="" /></div>
+        <div id="car_3" class="car"><img src="./images/yellow_car.png" alt="" /></div>
+
+
+    </div>
+
+    <script>
+        let container = document.querySelector(".container");
+        let car = document.querySelector("#car img");
+        let car_1 = document.querySelector("#car_1 img");
+        let car_2 = document.querySelector("#car_2 img");
+        let car_3 = document.querySelector("#car_3 img");
+        let line_1 = document.querySelector("#line_1");
+        let line_2 = document.querySelector("#line_2");
+        let line_3 = document.querySelector("#line_3");
+        let score = document.querySelector("#score");
+        let restart_box = document.querySelector("#restart_box");
+        let anim_id;
+        let game_over = false;
+        let score_counter = 1;
+        let speed = 2;
+        let line_speed = 5;
+        let move_right = false;
+        let move_left = false;
+        let move_up = false;
+        let move_down = false;
+        let container_left = parseInt(window.getComputedStyle(container).getPropertyValue('left'));
+        let container_width = parseInt(window.getComputedStyle(container).getPropertyValue('width'));
+        let container_height = parseInt(window.getComputedStyle(container).getPropertyValue('height'));
+        let car_width = parseInt(window.getComputedStyle(car).getPropertyValue('width'));
+        let car_height = parseInt(window.getComputedStyle(car).getPropertyValue('height'));
+
+
+
+    </script>
+</body>
+
+</html>
